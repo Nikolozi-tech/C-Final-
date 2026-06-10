@@ -31,6 +31,24 @@ HealthcareBillingSystem
 - Password: `Admin@12345`
 - Role: `Admin`
 
+## Fix SQL Server Connection Error
+
+If Swagger returns `No connection could be made because the target machine actively refused it`, SQL Server is not running on `localhost:1433`.
+
+Start SQL Server with Docker:
+
+```bash
+docker compose up -d
+```
+
+Then run the API in Development mode:
+
+```bash
+dotnet run --project HealthcareBillingSystem/API/HealthcareBillingSystem.API.csproj
+```
+
+In Development, the API automatically applies EF Core migrations and seeds the `Admin` and `Doctor` roles plus the default admin user.
+
 ## Migration Commands
 
 Run these commands from the repository root:

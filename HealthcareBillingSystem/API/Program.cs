@@ -3,6 +3,7 @@ using HealthcareBillingSystem.Infrastructure;
 using HealthcareBillingSystem.Infrastructure.Data;
 using HealthcareBillingSystem.Presentation.Controllers;
 using HealthcareBillingSystem.Presentation.Middleware;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -60,6 +61,13 @@ app.UseHttpsRedirection();
 app.UseMiddleware<JwtAuthMiddleware>();
 app.UseAuthentication();
 app.UseAuthorization();
+
+if (app.Configuration.GetValue<bool>("ApplyMigrationsOnStartup"))
+{
+    using var scope = app.Services.CreateScope();
+    var dbContext = scope.ServiceProvider.GetRequiredService<HealthDbContext>();
+    await dbContext.Database.MigrateAsync();
+}
 
 if (app.Configuration.GetValue<bool>("SeedDatabaseOnStartup"))
 {
